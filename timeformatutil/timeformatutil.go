@@ -7,8 +7,10 @@ import (
 )
 
 // TimeEncoder 时间格式化器
-// t 被格式化的时间，格式化为YYYYmmddhhiiss格式或YYYYmmddhhiissnn格式(到毫秒)
-func TimeFormator(t time.Time) (string, string) {
+// t 被格式化的时间，
+// 第一个返回值格式为YYYYmmddhhiiss(精确到到秒)
+// 第二个返回值格式为YYYYmmddhhiissnn(精确到到毫秒)
+func TimeEncoder(t time.Time) (string, string) {
 	second := t.Unix()                        //秒，int64
 	necond := t.UnixNano()                    //纳秒，int64 1s=10^9 ns
 	mtime := int((necond - second*1e9) / 1e6) //毫秒
@@ -26,10 +28,16 @@ func TimeFormator(t time.Time) (string, string) {
 	if len(s) == 1 {
 		s = "0" + s
 	}
+	if len(n) == 1 { // 毫秒时间，补足3位数
+		n = "00" + n
+	} else if len(n) == 2 {
+		n = "0" + n
+	}
+
 	timeString := time.Now().Format("2006-01-02 15:04:05")
 	ym := strings.Split(strings.Split(timeString, " ")[0], "-")
-	rtn1 := ym[0] + ym[1] + ym[2] + h + i + s + n
-	rtn2 := ym[0] + ym[1] + ym[2] + h + i + s
+	rtn1 := ym[0] + ym[1] + ym[2] + h + i + s
+	rtn2 := ym[0] + ym[1] + ym[2] + h + i + s + n
 	return rtn1, rtn2
 }
 

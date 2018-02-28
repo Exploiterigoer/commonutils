@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"strings"
 
-	"commonutils/crcutil"
+	"receiver/commonutils/crcutil"
 )
 
 // Encrypt 对给定的明文字符串加密
