@@ -1,8 +1,7 @@
-// iniutil 该报用于解析ini配置文件
+// Package iniutil the package for analyzing configuration file with the ini suffix
 package iniutil
 
 import (
-	//"bufio"
 	"bytes"
 	"fmt"
 	"io"
@@ -10,12 +9,13 @@ import (
 	"strings"
 )
 
+// Config struct
 type Config struct {
 	filepath string                         //your ini file path directory+file
 	conflist []map[string]map[string]string //configuration information slice
 }
 
-//Create an empty configuration file
+//SetConfig Creates an empty configuration file
 func SetConfig(filepath string) *Config {
 	c := new(Config)
 	c.filepath = filepath
@@ -23,7 +23,7 @@ func SetConfig(filepath string) *Config {
 	return c
 }
 
-//To obtain corresponding value of the key values
+//GetValue To obtain corresponding value of the key values
 func (c *Config) GetValue(section, name string) string {
 	c.ReadList()
 	conf := c.ReadList()
@@ -37,7 +37,7 @@ func (c *Config) GetValue(section, name string) string {
 	return ""
 }
 
-//Set the corresponding value of the key value, if not add, if there is a key change
+//SetValue Set the corresponding value of the key value, if not add, if there is a key change
 func (c *Config) SetValue(section, key, value string) bool {
 	c.ReadList()
 	data := c.conflist
@@ -61,22 +61,20 @@ func (c *Config) SetValue(section, key, value string) bool {
 	if ok {
 		c.conflist[i][section][key] = value
 		return true
-	} else {
-		conf[section] = make(map[string]string)
-		conf[section][key] = value
-		c.conflist = append(c.conflist, conf)
-		return true
 	}
 
-	return false
+	conf[section] = make(map[string]string)
+	conf[section][key] = value
+	c.conflist = append(c.conflist, conf)
+	return true
 }
 
-//Delete the corresponding key values
+//DeleteValue Delete the corresponding key values
 func (c *Config) DeleteValue(section, name string) bool {
 	c.ReadList()
 	data := c.conflist
 	for i, v := range data {
-		for key, _ := range v {
+		for key := range v {
 			if key == section {
 				delete(c.conflist[i][key], name)
 				return true
@@ -86,7 +84,7 @@ func (c *Config) DeleteValue(section, name string) bool {
 	return false
 }
 
-//List all the configuration file
+//ReadList List all the configuration file
 func (c *Config) ReadList() []map[string]map[string]string {
 	file, err := os.Open(c.filepath)
 	if err != nil {
@@ -100,13 +98,13 @@ func (c *Config) ReadList() []map[string]map[string]string {
 	x := make([]byte, 4096)
 	n, _ := file.Read(x)
 
+	buf = bytes.NewBuffer(x[:n])
 	if x[0] == 239 {
-		// UTF8-BOM编码格式的文件，需要去处BOM头
+		// If the configuration file is with utf8-bom format
+		// it needs to cut the bom
 		buf = bytes.NewBuffer(x[3:n])
-	} else {
-		// UTF8编码格式的文件，无需处理
-		buf = bytes.NewBuffer(x[:n])
 	}
+
 	for {
 		l, err := buf.ReadString('\n')
 		line := strings.TrimSpace(l)
@@ -121,7 +119,7 @@ func (c *Config) ReadList() []map[string]map[string]string {
 		}
 		switch {
 		case len(line) == 0:
-		case string(line[0]) == ";": //配置文件备注，此时不做任何处理
+		case string(line[0]) == ";": //doing nothing when a line staring with ";"
 		case line[0] == '[' && line[len(line)-1] == ']':
 			section = strings.TrimSpace(line[1 : len(line)-1])
 			data = make(map[string]map[string]string)
@@ -139,6 +137,7 @@ func (c *Config) ReadList() []map[string]map[string]string {
 	return c.conflist
 }
 
+// CheckErr dos something for the error
 func CheckErr(err error) string {
 	if err != nil {
 		return fmt.Sprintf("Error is :'%s'", err.Error())
@@ -146,10 +145,10 @@ func CheckErr(err error) string {
 	return "Notfound this error"
 }
 
-//Ban repeated appended to the slice method
+//uniquappend Ban repeated appended to the slice method
 func (c *Config) uniquappend(conf string) bool {
 	for _, v := range c.conflist {
-		for k, _ := range v {
+		for k := range v {
 			if k == conf {
 				return false
 			}

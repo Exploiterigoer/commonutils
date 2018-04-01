@@ -4,19 +4,23 @@ import (
 	"encoding/base64"
 	"strings"
 
-	"receiver/commonutils/crcutil"
+	"github.com/Exploiterigoer/commonutils/byteutil"
 )
 
-// Encrypt 对给定的明文字符串加密
+// Encrypt Encodes the given string
 func Encrypt(dbInfo string) string {
-	dbInfoHex := crcutil.TohexString([]byte(dbInfo))                                     // 明文字符串转16进制字符串
-	encryptStr := base64.StdEncoding.EncodeToString([]byte(strings.Join(dbInfoHex, ""))) // 16进制字符串转base64加密字符串
+	// hexing of the given string
+	dbInfoHex := byteutil.TohexString([]byte(dbInfo))
+	// encoding the  hex  string
+	encryptStr := base64.StdEncoding.EncodeToString([]byte(strings.Join(dbInfoHex, "")))
 	return encryptStr
 }
 
-// Decrypt 对给定的加密字符串解密
+// Decrypt Decodes the given string
 func Decrypt(encryptStr string) string {
-	dbInfoByte, _ := base64.StdEncoding.DecodeString(encryptStr) // base64加密字符串转16进制字符串
-	dbInfo := string(dbInfoByte)                                 // 16进制字符串转明文字符串
-	return crcutil.ToNormalString(dbInfo)
+	// decoding the given encoding string to non-crypto hexing string
+	dbInfoByte, _ := base64.StdEncoding.DecodeString(encryptStr)
+	// hexing string to normal string
+	dbInfo := string(dbInfoByte)
+	return byteutil.ToNormalString(dbInfo)
 }

@@ -6,14 +6,14 @@ import (
 	"time"
 )
 
-// TimeEncoder 时间格式化器
-// t 被格式化的时间，
-// 第一个返回值格式为YYYYmmddhhiiss(精确到到秒)
-// 第二个返回值格式为YYYYmmddhhiissnn(精确到到毫秒)
+// TimeEncoder time formatter
+// parameter "t", the time to be formated，
+// first return value with the form of YYYYmmddhhiiss
+// second return value with the form of YYYYmmddhhiissnn
 func TimeEncoder(t time.Time) (string, string) {
-	second := t.Unix()                        //秒，int64
-	necond := t.UnixNano()                    //纳秒，int64 1s=10^9 ns
-	mtime := int((necond - second*1e9) / 1e6) //毫秒
+	second := t.Unix()                        // second,int64
+	necond := t.UnixNano()                    // nanosecond,int64 1s=10^9 ns
+	mtime := int((necond - second*1e9) / 1e6) // millisecond
 	h := strconv.Itoa(t.Hour())
 	i := strconv.Itoa(t.Minute())
 
@@ -28,7 +28,7 @@ func TimeEncoder(t time.Time) (string, string) {
 	if len(s) == 1 {
 		s = "0" + s
 	}
-	if len(n) == 1 { // 毫秒时间，补足3位数
+	if len(n) == 1 { // millisecond string in the form of 3 number
 		n = "00" + n
 	} else if len(n) == 2 {
 		n = "0" + n
@@ -41,8 +41,8 @@ func TimeEncoder(t time.Time) (string, string) {
 	return rtn1, rtn2
 }
 
-// TimeDecoder 反时间格式化
-// 返回精确到秒或毫秒的时间字符串
+// TimeDecoder formats a string to a normal time string
+// returns the time string with the form of second or millisecond
 func TimeDecoder(timeString string) string {
 	var validTimeString, s string
 	length := len(timeString)
@@ -62,10 +62,12 @@ func TimeDecoder(timeString string) string {
 	return validTimeString
 }
 
-// WeekDateTimeInteger 截取年月日时分秒对应的整数
-// t 指定的时间
-// flag 截取的信息
-// y、Y表示年，m、M表示月，d、D表示日，h、H表示时,i、I表示分，s、S表示秒，w、W表示周
+// WeekDateTimeInteger  Gets the integer of the year,month,day,hour,minutes,second and the week
+// parameter "t",the time to be cut
+// parameter "flag",type for needding,
+// y or Y for year,m or M for month,d or D for day,h or H for hour,
+// i or I for minutes,s or S for second,w or W for week
+// NOTE:if the flag is w or W,the return value from 0 to 7,which corresponds of Sunday to Saturday
 func WeekDateTimeInteger(t time.Time, flag byte) int {
 	str := t.Format("2006-01-02 15:04:05")
 	str = strings.Replace(str, " ", "-", -1)

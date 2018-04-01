@@ -34,7 +34,7 @@ func TohexString(msg []byte) []string {
 }
 
 // ToNormalString converts a hex string to a normal string
-// parameter "hexStr",the character to be converted
+// parameter "hexStr",the char to be converted
 func ToNormalString(hexStr string) string {
 	hexs := strings.Split(hexStr, "")
 	hexb := make([]byte, 0)
@@ -142,7 +142,7 @@ func ByteToUCS2(b []byte) []interface{} {
 }
 
 // UCS2ToByte converts an UCS2 to a byte slice.
-// parameter "u", the UCS2 character to be converted.
+// parameter "u", the UCS2 char to be converted.
 // parameter "ord",a byte slice with bigEndian or littleEndian,1 for bigEndian,0 for littleEndian.
 func UCS2ToByte(u uint16, ord int) []byte {
 	buffer := bytes.NewBuffer([]byte{})

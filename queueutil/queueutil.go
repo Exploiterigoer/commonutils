@@ -1,4 +1,4 @@
-// 消息队列包
+// Package queueutil a package for queue
 package queueutil
 
 import (
@@ -13,7 +13,7 @@ type esCache struct {
 	value interface{}
 }
 
-// lock free queue
+// EsQueue lock free queue
 type EsQueue struct {
 	capaciity uint32
 	capMod    uint32
@@ -22,7 +22,7 @@ type EsQueue struct {
 	cache     []esCache
 }
 
-// NewQueue 创建消息队列
+// NewQueue creates a new queue
 func NewQueue(capaciity uint32) *EsQueue {
 	q := new(EsQueue)
 	q.capaciity = minQuantity(capaciity)
@@ -41,8 +41,7 @@ func NewQueue(capaciity uint32) *EsQueue {
 	return q
 }
 
-// String 获取消息队列的描述
-// 如容量大小，用了多少用量等等
+// String Gets the information of queue
 func (q *EsQueue) String() string {
 	getPos := atomic.LoadUint32(&q.getPos)
 	putPos := atomic.LoadUint32(&q.putPos)
@@ -50,12 +49,12 @@ func (q *EsQueue) String() string {
 		q.capaciity, q.capMod, putPos, getPos)
 }
 
-// Capaciity 获取消息队列的容量
+// Capaciity Gets the capaciity of queue
 func (q *EsQueue) Capaciity() uint32 {
 	return q.capaciity
 }
 
-// Quantity 计算消息队列的容量
+// Quantity Gets the quantity of queue
 func (q *EsQueue) Quantity() uint32 {
 	var putPos, getPos uint32
 	var quantity uint32
@@ -71,8 +70,8 @@ func (q *EsQueue) Quantity() uint32 {
 	return quantity
 }
 
-// Put 将数据存入消息队列
-// 返回是否存入成功以及已经在队列的元素个数
+// Put puts element into the queue,
+// it returns true or false and remainder quantity
 func (q *EsQueue) Put(val interface{}) (ok bool, quantity uint32) {
 	var putPos, putPosNew, getPos, posCnt uint32
 	var cache *esCache
@@ -107,14 +106,13 @@ func (q *EsQueue) Put(val interface{}) (ok bool, quantity uint32) {
 			cache.value = val
 			atomic.AddUint32(&cache.putNo, q.capaciity)
 			return true, posCnt + 1
-		} else {
-			runtime.Gosched()
 		}
+		runtime.Gosched()
 	}
 }
 
-// Get 从消息队列中取出数据
-// 返回取到的数据、是否取出成功，队列当前的容量
+// Get Gets task form the queue,
+// it returns the task,true or false and the remainder of quantity
 func (q *EsQueue) Get() (val interface{}, ok bool, quantity uint32) {
 	var putPos, getPos, getPosNew, posCnt uint32
 	var cache *esCache
@@ -149,13 +147,13 @@ func (q *EsQueue) Get() (val interface{}, ok bool, quantity uint32) {
 			val = cache.value
 			atomic.AddUint32(&cache.getNo, q.capaciity)
 			return val, true, posCnt - 1
-		} else {
-			runtime.Gosched()
 		}
+
+		runtime.Gosched()
 	}
 }
 
-// round 到最近的2的倍数
+// minQuantity Get the close multiple of 2
 func minQuantity(v uint32) uint32 {
 	v--
 	v |= v >> 1

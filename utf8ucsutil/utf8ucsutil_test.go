@@ -1,4 +1,4 @@
-package utf8ucs2util
+package utf8ucsutil
 
 import (
 	"testing"

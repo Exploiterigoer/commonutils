@@ -1,16 +1,17 @@
 package pprofutil
 
 import (
-	"commonutils/logutil"
 	"os"
 	"runtime/pprof"
+
+	"github.com/Exploiterigoer/commonutils/logutil"
 )
 
-// CPU pprof 分析
+// CPUAnalyze pprof for CPU
 func CPUAnalyze(profileName string) {
 	f, err := os.OpenFile(profileName+".prof", os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
-		logutil.LogInformation("记录CPU信息出错")
+		logutil.LogInformation("logging in error for CPU")
 	}
 	pprof.StartCPUProfile(f)
 
@@ -20,11 +21,11 @@ func CPUAnalyze(profileName string) {
 	f.Close()
 }
 
-// memory pprof 分析
+// MemoryAnalyze pprof for memory
 func MemoryAnalyze(profileName string) {
 	f, err := os.OpenFile(profileName+".prof", os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
-		logutil.LogInformation("记录内存信息出错")
+		logutil.LogInformation("logging in error for memory")
 	}
 	pprof.WriteHeapProfile(f)
 
@@ -33,7 +34,7 @@ func MemoryAnalyze(profileName string) {
 	f.Close()
 }
 
-// goroutine threadcreate heap block 分析
+// GthbAnalyze pprof for goroutine threadcreate heap block
 func GthbAnalyze(profileType string, debug int) {
 	profileName := profileType + ".prof"
 	f, err := os.OpenFile(profileName, os.O_RDWR|os.O_CREATE, 0644)
@@ -41,7 +42,7 @@ func GthbAnalyze(profileType string, debug int) {
 		logutil.LogInformation(err)
 	}
 	if err = pprof.Lookup(profileType).WriteTo(f, debug); err != nil {
-		logutil.LogInformation("记录pprof.Lookup信息出错")
+		logutil.LogInformation("logging in error for goroutine")
 	}
 	f.Close()
 }

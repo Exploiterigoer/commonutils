@@ -5,15 +5,15 @@ import (
 )
 
 var m sync.Mutex
-var sequenceId uint32
+var sequenceID uint32
 
-// SequenceGenerator 流水号发生器
+// SequenceGenerator serial number generator
 func SequenceGenerator() uint32 {
 	m.Lock()
-	sequenceId++
-	if sequenceId > (^uint32(0)) {
-		sequenceId = 0
+	sequenceID++
+	if sequenceID > (^uint32(0)) {
+		sequenceID = 0
 	}
 	m.Unlock()
-	return sequenceId
+	return sequenceID
 }
