@@ -96,7 +96,7 @@ func ByteToInt(b []byte, ord, intType int) uint64 {
 // IntToByte converts an integer to a byte slice.
 // parameter "i", the integer to be converted.
 // parameter "ord",a byte slice with bigEndian or littleEndian,1 for bigEndian,0 for littleEndian.
-// parameter "bitSize",the length of the byte slice,1 ror 1 bit,4 for 4 bits,8 for 8 bits.
+// parameter "bitSize",the length of the byte slice,1 for 1 bit,4 for 4 bits,8 for 8 bits.
 func IntToByte(i, ord, bitSize int) []byte {
 	buffer := bytes.NewBuffer([]byte{})
 	switch bitSize {
