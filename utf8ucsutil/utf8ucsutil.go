@@ -10,13 +10,13 @@
 // eg:
 // UCS-2 code of "中国abcd" ---> 2D 4E FD 56 61 00 62 00 63 00 64 00
 // UTF-8 code of "中国abcd" ---> E4 B8 AD E5 9B BD 61 62 63 64"
-
 package utf8ucsutil
 
 // ToUCS2 Converts utf8 string to ucs-2 code or ucs4 code
 // if the a char with 4 byte,it will convert to ucs4 code,
 // in others case,all wil convert to ucs2 code
-// NOTE:the converting string must be a string with utf8 code
+// NOTE:
+// the converting string must be a string with utf8 code
 func ToUCS2(utf8Char string) []interface{} {
 	utf8ByteArray := []byte(utf8Char)
 	ucsArray := make([]interface{}, 0)
@@ -56,11 +56,10 @@ func ToUCS2(utf8Char string) []interface{} {
 	return ucsArray
 }
 
-// ToUTF8 将ucs(ucs-2或ucs-4)编码的字符转换为utf-8编码的字符串
-// ucsArray 是字符对应的ucs编码数组，每个元素要么数uint16，要么是
-// uint32，uint16类型的元素对应ucs-2字符的编码，uint32类型则的对
-// 应ucs-4字符的编码
 // ToUTF8 Converts ucs code(ucs-2 or ucs-4) to utf8 char
+// NOTE:
+// every element of ucsArray is either the uint16 type or the uint32 type
+// the uint16 type corresponds of ucs2,the uint32 type corresponds of ucs4
 func ToUTF8(ucsArray []interface{}) string {
 	char := make([]byte, 0)
 	for _, val := range ucsArray {
