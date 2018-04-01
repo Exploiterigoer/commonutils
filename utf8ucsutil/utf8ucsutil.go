@@ -1,11 +1,11 @@
-// Package utf8ucsutil this package converts utf8 character to ucs-2 or ucs-2 to utf8 char.
+// Package utf8ucsutil this package converts utf8 chars to ucs-2 or ucs-2 to utf8 char.
 // 0000 0000-0000 007F | 0xxxxxxx                            | char with 1 byte
 // 0000 0080-0000 07FF | 110xxxxx 10xxxxxx                   | char with 2 byte
 // 0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx          | char with 3 byte
 // 0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx | char with 4 byte
 // char with 1 byte for testing:ASCII alphabet
 // char with 2 byte for testing:Greek alphabet alphabet
-// char with 2 byte for testing(\U0000-\UFFFF)：A variety of common Chinese characters and full width punctuation
+// char with 2 byte for testing(\U0000-\UFFFF)：A variety of common Chinese chars and full width punctuation
 // char with 2 byte for testing(\U00020000 ~ \U0002B81D)：𠀀、𪚥、𪚺、𠀁
 // eg:
 // UCS-2 code of "中国abcd" ---> 2D 4E FD 56 61 00 62 00 63 00 64 00
